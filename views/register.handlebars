@@ -1,0 +1,19 @@
+<!-- views/signin.handlebars -->
+<div class="panel">
+<h2>Create a new account</h2>
+  <form id="local-reg" action="/local-reg" method="post">
+    <div>
+        <p></p>
+        <label>Username:</label>
+        <input class="form-control form-control-lg"  type="text" name="username"/>
+    </div>
+    <div>
+        <label>Password:</label>
+        <input class="form-control form-control-lg"  type="password" name="password"/>
+    </div>
+    <div style="margin-top:15px">
+        <input type="submit" class="btn btn-primary btn-sm" value="Register"/>
+    </div>
+  <br>{{{ captcha }}}
+  </form>
+</div>

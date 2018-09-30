@@ -1,0 +1,11 @@
+<!-- views/home.handlebars -->
+    <div class="panel">
+          <h2>Proposals list</h2>
+       <div class="panel-body">
+    {{#each proposals}}
+          <a href="/discussion/{{this.hash}}">{{this.description}}</a><br>
+          Requested amount: {{this.requested_amount}}<br>
+    {{/each}}
+       </div>
+    </div>
+

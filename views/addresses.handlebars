@@ -1,0 +1,53 @@
+<!-- views/addresses.handlebars -->
+   {{#if user}}
+    <div class="panel panel-default">
+       <div class="panel-heading">
+          <h3 class="panel-title">Profile Information</h3>
+       </div>
+       <div class="panel-body">
+          <p>Username: {{user.username}}</p>
+          {{#if user.balance}}
+          <p>Balance: {{user.balance}} NAV ({{divide (floor (multiply 10000 (divide user.balance stakingCoins))) 100}}% staking weight / approx {{floor (multiply 20160 (divide user.balance stakingCoins))}} votes per period)</p>
+          {{/if}}
+       </div>
+    </div>
+
+    {{/if}}
+    <div class="panel panel-default">
+       <div class="panel-heading">
+          <h3 class="panel-title">Linked Addresses</h3>
+       </div>
+       <div class="panel-body">
+          <ul>
+          {{#each addresses}}
+             <li>{{this.address}} - {{this.balance}}NAV <i><a href="/delete-address?address={{this.address}}">Delete address</a></i></li>
+          {{/each}}
+          </ul>
+       </div>
+    </div>
+
+    <div class="panel panel-default">
+       <div class="panel-heading">
+          <h3 class="panel-title">Add a new address</h3>
+       </div>
+       <div class="panel-body">
+          <form id="add-address" action="/addresses" method="post">
+             <div>
+                <label>Address:</label>
+                <input class="form-control form-control-lg" type="text"  name="address" value="" oninput="a.innerHTML='signmessage '+this.value+' {{salt}}';command.style.display=this.value==''?'none':'block'"/>
+             </div>
+             <div id="command" style="display:none">
+                <p><br>Go to your wallet's console, introduce <b><span id="a" class="clipboard">signmessage address {{salt}}</span></b> and paste the result in the signature field</p>
+                <label>Signature:</label>
+                <input class="form-control form-control-lg" type="text"  name="signature"/>
+                <input type="hidden" name="salt" value="{{salt}}"/>
+             </div>
+            <div style="margin-top:15px">
+               <input type="submit" class="btn btn-primary mb2" value="Add"/>
+            </div>
+         </form>
+      </div>
+   </div>
+
+
+
