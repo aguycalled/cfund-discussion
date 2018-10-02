@@ -7,7 +7,9 @@
        <div class="panel-body">
           <p>Username: {{user.username}}</p>
           {{#if user.balance}}
+          {{#if stakingCoins}}
           <p>Balance: {{user.balance}} NAV ({{divide (floor (multiply 10000 (divide user.balance stakingCoins))) 100}}% staking weight / approx {{floor (multiply 20160 (divide user.balance stakingCoins))}} votes per period)</p>
+          {{/if}}
           {{/if}}
        </div>
     </div>

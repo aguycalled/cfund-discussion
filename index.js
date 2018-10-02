@@ -12,11 +12,23 @@ var express = require('express'),
     funct = require('./functions.js'),
     helpers = require('handlebars-helpers'),
     Handlebars     = require('handlebars'),
-    HandlebarsIntl = require('handlebars-intl');
+    HandlebarsIntl = require('handlebars-intl'),
+    MomentHandler = require("handlebars.moment"),
+    _ = require("underscore");
 
 var math = helpers.math();
 
 HandlebarsIntl.registerWith(Handlebars);
+MomentHandler.registerHelpers(Handlebars);
+Handlebars.registerHelper('eq', function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
+Handlebars.registerHelper('in', function(elem, list, options) {
+  if(list.indexOf(elem) > -1) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
 
 var app = express();
 
@@ -25,6 +37,9 @@ var recaptcha = new Recaptcha(config.recaptchaSiteKey, config.recaptchaSecretKey
 
 var mongodbUrl = 'mongodb://' + config.mongodbHost + ':27017/users';
 var MongoClient = require('mongodb').MongoClient
+
+var statuses = ['PENDING','ACCEPTED','REJECTED','EXPIRED','WAITING'];
+var count = [0, 0, 0, 0, 0];
 
 passport.use('local-signin', new LocalStrategy(
   {passReqToCallback : true}, 
@@ -86,6 +101,7 @@ function ensureAuthenticated(req, res, next) {
   req.session.error = 'Please sign in!';
   res.redirect('/signin');
 }
+app.use(express.static('public'))
 app.use(logger('combined'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -119,7 +135,7 @@ var proposalsMap = {};
 function getNetworkStats() {
    var urlStakes = 'https://chainz.cryptoid.info/explorer/index.stakes.dws?coin=nav';
    var urlData = 'https://chainz.cryptoid.info/explorer/index.data.dws?coin=nav';
-   var urlProposals = 'https://testnet.navexplorer.com/api/community-fund/proposal?state=pending';
+   var urlProposals = 'https://testnet.navexplorer.com/api/community-fund/proposal';
    request({
       url: urlData,
       json: true
@@ -142,11 +158,25 @@ function getNetworkStats() {
                json: true
             }, function (error, response, body) {
               if (!error && response.statusCode === 200) {
+                 count = [0, 0, 0, 0, 0];
                  proposals = body;
                  for (var  p in proposals) {
+                    if (statuses.indexOf(proposals[p].state) != -1) {
+                       count[statuses.indexOf(proposals[p].state)]++;
+                    }
                     proposalsMap[proposals[p].hash]=proposals[p];
-                 }
-              }
+                    request({
+                       url:  'https://testnet.navexplorer.com/api/community-fund/proposal/'+proposals[p]+'/payment-request',
+                        json: true
+                     }, function (error, response, body) {
+                        if (!error && response.statusCode === 200) {
+			   proposalsMap[proposals[p].hash].payment_requests_count = body.length;
+			   proposals[p].payment_requests_count = body.length;
+                           console.log(body);
+                        }
+                     });
+                  }
+               }
             });
          });
       }
@@ -168,7 +198,12 @@ app.get('/', function(req, res){
      warning ="You need to log in to participate in the discussion!";
   else if (!req.user.balance)
      warning ="Please, link some staking address in order to use the discussion functionality!";
-  res.render('home', {user: req.user, proposals: proposals, warning: warning});
+  var f=[]; 
+  for (var c in statuses) {
+     if(req.query[statuses[c]] == 'on') f.push(statuses[c]);
+  }
+  f = f.length == 0 ? ['PENDING','WAITING'] : f;
+  res.render('home', {user: req.user, proposals: _.sortBy(proposals, 'created_at').reverse(), warning: warning, filter: f, count: count, statuses: statuses});
 });
 
 app.get('/signin', function(req, res){

@@ -11,6 +11,7 @@
     "express-recaptcha": "^4.0.3",
     "handlebars-helpers": "^0.10.0",
     "handlebars-intl": "^1.1.2",
+    "handlebars.moment": "^1.0.4",
     "mongodb": "^2.2.11",
     "passport": "^0.2.0",
     "passport-facebook": "^1.0.3",
@@ -18,6 +19,7 @@
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.2",
     "q": "^1.0.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "underscore": "^1.9.1"
   }
 }

@@ -106,7 +106,7 @@ exports.getDiscussion = function(hash, stakingCoins) {
   MongoClient.connect(mongodbUrl, function(err, db) {
     var collection = db.collection('Discussion');
     var collectionUsers = db.collection('localUsers');
-    var cursor = collection.find({'hash': hash}).toArray(function (err, results) {
+    var cursor = collection.find({'hash': hash}).sort({ "time": 1 }).toArray(function (err, results) {
       async.forEachOf(results, function(value,key,callback) {
         collectionUsers.findOne({'username':results[key].username}).then(function (result) {
           if (null != result) results[key].balance = result.balance / stakingCoins;

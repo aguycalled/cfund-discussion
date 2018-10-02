@@ -11,9 +11,17 @@
 
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
   <style>
   .clipboard {
     cursor:pointer;border:1px dotted #555;padding:8px
+  }
+  .table > tbody > tr:first-child > td {
+    border: none;
+  }
+  .table > thead + tbody > tr:first-child > td {
+    border-top: 1px solid #ddd;
   }
   </style>
   </head>
@@ -93,7 +101,9 @@
 
     <!-- Latest compiled and minified JavaScript -->
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
   <script>
+var C = new ClipboardJS('.btn');
 var clipboard = document.querySelectorAll('.clipboard');
 clipboard.forEach(function (el) {
   el.addEventListener('click', function () {
@@ -123,6 +133,9 @@ clipboard.forEach(function (el) {
     }
   });
 });
+ $(document).on('click', '.panel[data-href]:not(a)', function(){
+     window.location = $(this).attr('data-href');
+ });
   </script>
 </body>
 </html>
