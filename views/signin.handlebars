@@ -1,31 +1,27 @@
 <!-- views/signin.handlebars -->
 <div class="row">
-<div class="col-md-4"></div>
-<div class="col-md-4">
-<div class="panel panel-primary">
-<div class="panel-heading">Login</div>
-<div class="panel-body">
-  <form id="local-sign-in" action="/login" method="post">
-    <div>
-        <p></p>
-        <label>Username:</label>
-        <input class="form-control form-control-lg"  type="text" name="username"/>
-    </div>
-    <div>
-        <label>Password:</label>
-        <input class="form-control form-control-lg" type="password" name="password"/>
-    </div>
-    <div style="margin-top:15px">
-        <input type="submit" class="btn btn-primary btn-sm" value="Log In"/>
-    </div>
-    <br>{{{captcha}}}
-  </form>
-</div>
-</div>
-<div class="col-md-4"></div>
-</div>
-
-
-
-
-
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Login</div>
+        <div class="panel-body">
+          <form id="local-sign-in" action="/login" method="post">
+            <div>
+              <p></p>
+              <label>Username:</label>
+              <input class="form-control form-control-lg"  type="text" name="username"/>
+            </div>
+            <div>
+              <label>Password:</label>
+              <input class="form-control form-control-lg" type="password" name="password"/>
+            </div>
+            <div style="margin-top:15px">
+              <input type="submit" class="btn btn-primary btn-sm" value="Log In"/>
+            </div>
+            <br>{{{captcha}}}
+          </form>
+        </div>
+      </div>
+    <div class="col-md-4"></div>
+  </div>
+</div>  
