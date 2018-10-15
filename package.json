@@ -1,12 +1,13 @@
 {
   "name": "cfund",
+  "repository": "github:aguycalled/cfund-discussion",
   "main": "index.js",
   "dependencies": {
     "async": "^2.6.1",
     "bcryptjs": "^0.7.12",
     "bitcore-lib": "github:encrypt-s/bitcore-lib",
     "bitcore-message": "github:encrypt-s/bitcore-message",
-    "express": "^3.5.0",
+    "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
     "express-recaptcha": "^4.0.3",
     "handlebars-helpers": "^0.10.0",
