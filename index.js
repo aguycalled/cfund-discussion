@@ -197,7 +197,7 @@ app.get('/', function(req, res){
   if(!req.user)
      warning ="You need to log in to participate in the discussion!";
   else if (!req.user.balance)
-     warning ="Please, link some staking address in order to use the discussion functionality!";
+     warning ="Please, link some staking addresses to your account in order to use the discussion functionality!";
   var f=[]; 
   for (var c in statuses) {
      if(req.query[statuses[c]] == 'on') f.push(statuses[c]);
@@ -219,7 +219,7 @@ app.get('/addresses', function(req, res) {
     funct.getAddresses(req.user.username).then(function(a) {
       var warning="";
       if(req.user && !req.user.balance)
-        warning ="Please, link some staking address in order to use the discussion functionality!";
+        warning ="Please, link some staking addresses to your account in order to use the discussion functionality!";
       res.render('addresses', {user: req.user, addresses: a, salt:  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),  captcha:recaptcha.render(), warning: warning});
     });
   });
@@ -245,20 +245,20 @@ app.get('/delete-address', function(req, res) {
   });
 });
 
-function IsValidThread(hash) {
+function isValidThread(hash) {
   if (hash.length === 64) 
     return true  
   return false
 }
 
 app.get('/discussion/:hash', function(req, res) {
-  if(IsValidThread(req.param('hash'))) {
+  if(isValidThread(req.param('hash'))) {
     funct.getDiscussion(req.param('hash'), app.locals.stakingCoins).then(function(m) {
       var warning="";
       if(!req.user)
         warning ="You need to log in to participate in the discussion!";
       else if (!req.user.balance)
-        warning ="Please, link some staking address in order to use the discussion functionality!";
+        warning ="Please, link some staking addresses to your account in order to use the discussion functionality!";
       res.render('discussion', {user:req.user, proposal: proposalsMap[req.param('hash')], messages: m, captcha:recaptcha.render(), warning: warning, hash: req.param('hash')});
     });
   } else {
@@ -268,7 +268,7 @@ app.get('/discussion/:hash', function(req, res) {
 })
 .post('/discussion/:hash', function(req, res) {
   ensureAuthenticated(req, res, function(req, res) {
-    if(IsValidThread(req.param('hash'))) {
+    if(isValidThread(req.param('hash'))) {
       if(!req.user.balance) {
           res.redirect('/discussion/'+req.param('hash'));
       } else {
