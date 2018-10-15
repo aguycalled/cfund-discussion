@@ -246,7 +246,9 @@ app.get('/delete-address', function(req, res) {
 });
 
 function IsValidThread(hash) {
-  return hash="test";
+  if (hash.length === 64) 
+    return true  
+  return false
 }
 
 app.get('/discussion/:hash', function(req, res) {
