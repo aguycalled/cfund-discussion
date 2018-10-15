@@ -8,13 +8,14 @@ var express = require('express'),
   session = require('express-session'),
   passport = require('passport'),
   LocalStrategy = require('passport-local'),
-  config = require('./config.js'),
   funct = require('./functions.js'),
   helpers = require('handlebars-helpers'),
   Handlebars = require('handlebars'),
   HandlebarsIntl = require('handlebars-intl'),
   MomentHandler = require('handlebars.moment'),
   _ = require('underscore');
+  
+  const config = require('./config.js');
 
 var math = helpers.math();
 
@@ -161,8 +162,8 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.locals({ totalSupply: 0 });
-app.locals({ stakingCoins: 0 });
+app.locals.totalSupply = 0;
+app.locals.stakingCoins = 0;
 var proposals = [];
 var proposalsMap = {};
 
@@ -191,7 +192,7 @@ function getNetworkStats() {
               for (var s in body.stakes) {
                 total += parseFloat(body.stakes[s].amount);
               }
-              app.locals({ stakingCoins: total });
+              app.locals.stakingCoins = total;
             }
             request(
               {
@@ -416,4 +417,4 @@ app.get('/logout', function(req, res) {
 
 var port = process.env.PORT || 5000;
 app.listen(port);
-console.log('listening on ' + port + '!');
+console.log('listening on `localhost:' + port + '`!');
