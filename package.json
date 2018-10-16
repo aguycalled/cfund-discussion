@@ -2,6 +2,10 @@
   "name": "cfund",
   "repository": "github:aguycalled/cfund-discussion",
   "main": "index.js",
+  "scripts": {
+    "dev": "node index.js development",
+    "prod": "node index.js"
+  },
   "dependencies": {
     "async": "^2.6.1",
     "bcryptjs": "^0.7.12",
