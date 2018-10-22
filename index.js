@@ -15,7 +15,10 @@ var express = require('express'),
   MomentHandler = require('handlebars.moment'),
   _ = require('underscore');
   
-  const config = require('./config.js');
+const config = require('./config.js');
+
+const developmentMode = process.argv[2] === 'development';
+
 
 var math = helpers.math();
 
@@ -32,12 +35,21 @@ Handlebars.registerHelper('in', function(elem, list, options) {
 });
 
 var app = express();
+var Recaptcha,
+    recaptcha;
+if (developmentMode) {
+  recaptcha = {
+    verify: (res, postVerFunction) => postVerFunction(),
+    render: () => `<p>DevMode is on, no captcha required.</p>`,
 
-var Recaptcha = require('express-recaptcha').Recaptcha;
-var recaptcha = new Recaptcha(
-  config.recaptchaSiteKey,
-  config.recaptchaSecretKey
-);
+  }
+} else {
+  Recaptcha = require('express-recaptcha').Recaptcha;
+  recaptcha = new Recaptcha(
+    config.recaptchaSiteKey,
+    config.recaptchaSecretKey
+    );
+  }
 
 var mongodbUrl = 'mongodb://' + config.mongodbHost + ':27017/users';
 var MongoClient = require('mongodb').MongoClient;
@@ -73,6 +85,7 @@ passport.use(
       });
   })
 );
+
 passport.use(
   'local-signup',
   new LocalStrategy({ passReqToCallback: true }, function(
@@ -396,7 +409,7 @@ app.post('/local-reg', function(req, res) {
 
 app.post('/login', function(req, res) {
   recaptcha.verify(req, function(error, data) {
-    if (true)
+    if (!error)
       passport.authenticate('local-signin', {
         successRedirect: '/',
         failureRedirect: '/signin'
@@ -417,4 +430,8 @@ app.get('/logout', function(req, res) {
 
 var port = process.env.PORT || 5000;
 app.listen(port);
-console.log('listening on `localhost:' + port + '`!');
+
+if (developmentMode)
+  console.log("Running in Devopment Mode.", "Captcha is disabled.");
+
+console.log('Listening on `localhost:' + port + '`!');
