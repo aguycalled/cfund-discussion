@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="User Authentication">
+  <meta name="author" content="">
+
+  <title>NAV Community Fund</title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+  <style>
+  .clipboard {
+    cursor:pointer;border:1px dotted #555;padding:8px
+  }
+  .table > tbody > tr:first-child > td {
+    border: none;
+  }
+  .table > thead + tbody > tr:first-child > td {
+    border-top: 1px solid #ddd;
+  }
+  </style>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <nav class="navbar navbar-default sticky-top " role="navigation">
+      <div class="container-fluid">
+
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <p class="navbar-brand">
+          <a href="/"><img src="https://d33wubrfki0l68.cloudfront.net/e93197a1b6a85d79bd3df754f330703816889a6a/5a659/images/nav-logo.png" height=16 style="padding-right:10px;"><b>COMMUNITY FUND</b></a>
+        </p>
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+              {{#if user}}
+	                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li>
+                    <a href="/addresses">My Addresses</a>
+                  </li>
+                  <li>
+                    <a href="/logout">Log Out</a>
+                  </li>
+              {{else}}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                <li>
+                <a href="/signin">Login</a>
+                </li>
+		<li>
+                <a href="/register">Register</a>
+		</li>
+              {{/if}}
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    {{#if error}}
+      <p class="alert alert-warning">{{{error}}}</p>
+    {{/if}}
+
+    {{#if warning}}
+      <p class="alert alert-warning">{{{warning}}}</p>
+    {{/if}}
+
+    {{#if success}}
+      <p class="alert alert-success">{{{success}}}</p>
+    {{/if}}
+
+    {{#if notice}}
+      <p class="alert alert-info">{{{notice}}}</p>
+    {{/if}}
+
+    <!--where our other templates will insert-->
+    {{{body}}}
+
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+  <script>
+var C = new ClipboardJS('.btn');
+var clipboard = document.querySelectorAll('.clipboard');
+clipboard.forEach(function (el) {
+  el.addEventListener('click', function () {
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    try {
+      document.execCommand('copy');
+      selection.removeAllRanges();
+
+      var original = el.textContent;
+      el.textContent = 'Copied!';
+
+      setTimeout(function () {
+        el.textContent = original;
+      }, 1200);
+    } catch (e) {
+      var errorMsg = document.querySelector('.error-msg');
+      errorMsg.classList.add('show');
+
+      setTimeout(function () {
+        errorMsg.classList.remove('show');
+      }, 1200);
+    }
+  });
+});
+ $(document).on('click', '.panel[data-href]:not(a)', function(){
+     window.location = $(this).attr('data-href');
+ });
+  </script>
+</body>
+</html>
