@@ -108,10 +108,14 @@ exports.getDiscussion = function(hash, stakingCoins) {
     var collectionUsers = db.collection('localUsers');
     var cursor = collection.find({'hash': hash}).sort({ "time": 1 }).toArray(function (err, results) {
       async.forEachOf(results, function(value,key,callback) {
-        collectionUsers.findOne({'username':results[key].username}).then(function (result) {
-          if (null != result) results[key].balance = result.balance / stakingCoins;
+        if(results[key].type == 0) {
+          collectionUsers.findOne({'username':results[key].username}).then(function (result) {
+            if (null != result) results[key].balance = result.balance / stakingCoins;
+            callback();
+          });
+        } else {
           callback();
-        });
+        }
       }, function (err) {
         deferred.resolve(results);
       });
@@ -134,6 +138,26 @@ exports.addComment = function(hash, username, comment) {
   });
   return deferred.promise;
 
+}
+
+exports.addPaymentRequest = function(pr) {
+  var deferred = Q.defer();
+  MongoClient.connect(mongodbUrl, function(err, db) {
+    var collection = db.collection('Discussion');
+    collection.findOne({'hash': pr.proposal_hash, 'username' : pr.hash})
+      .then(function (result) {
+        if (null == result) {
+          var date = new Date(pr.created_at);
+          comment = { "hash": pr.proposal_hash, "username": pr.hash, "type": 1, "comment": pr.description, "balance": pr.requested_amount, "time": date.getTime()};
+          collection.insert(comment)
+          .then(function () {
+            db.close();
+            deferred.resolve(comment);
+          });
+        }
+    });
+  });
+  return deferred.promise;
 }
 
 exports.deleteAddress = function(username,address) {

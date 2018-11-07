@@ -2,8 +2,8 @@
 <div class="row">
   <div class="col-sm-3">
     <div class="panel panel-primary">
-    	<div class="panel-heading">
-          Filter
+      <div class="panel-heading">
+          Filter Proposals
       </div>
       <div class="panel-body">
         <form id="filterform" action="/" method="get">
@@ -23,6 +23,27 @@
             <label class="btn btn-primary {{#in "WAITING" this.filter}}active{{/in}}">
               <input type="checkbox" name="WAITING" id="WAITING" autocomplete="off" {{#in "WAITING" this.filter}}checked{{/in}} onChange="this.form.submit()"> Waiting <span class="badge badge-light">{{count.[4]}}</span>
             </label>
+      </div>
+    </div>
+  </div>
+    <div class="panel panel-primary">
+    	<div class="panel-heading">
+          Filter Payment Requests
+      </div>
+      <div class="panel-body">
+          <div class="btn-group-vertical btn-block btn-group-toggle" aria-label="Filter proposals" data-toggle="buttons">
+            <label class="btn btn-primary {{#in "PENDING" this.filter_pr}}active{{/in}}">
+              <input type="checkbox" name="PENDING_PR" id="PENDING_PR" autocomplete="off" {{#in "PENDING" this.filter_pr}}checked{{/in}} onChange="this.form.submit()"> Pending <span class="badge badge-light">{{count_pr.[0]}}</span>
+            </label>
+            <label class="btn btn-primary {{#in "ACCEPTED" this.filter_pr}}active{{/in}}"  onmouseclick="filterform.submit()">
+              <input type="checkbox" name="ACCEPTED_PR" id="ACCEPTED_PR" autocomplete="off" {{#in "ACCEPTED" this.filter_pr}}checked{{/in}} onChange="this.form.submit()"> Accepted <span class="badge badge-light">{{count_pr.[1]}}</span>
+            </label>
+            <label class="btn btn-primary {{#in "REJECTED" this.filter_pr}}active{{/in}}">
+              <input type="checkbox" name="REJECTED_PR" id="REJECTED_PR" autocomplete="off" {{#in "REJECTED" this.filter_pr}}checked{{/in}} onChange="this.form.submit()"> Rejected <span class="badge badge-light">{{count_pr.[2]}}</span>
+            </label>
+            <label class="btn btn-primary {{#in "EXPIRED" this.filter_pr}}active{{/in}}">
+              <input type="checkbox" name="EXPIRED_PR" id="EXPIRED_PR" autocomplete="off" {{#in "EXPIRED" this.filter_pr}}checked{{/in}} onChange="this.form.submit()"> Expired <span class="badge badge-light">{{count_pr.[3]}}</span>
+            </label>
         </form>
       </div>
     </div>
@@ -30,12 +51,55 @@
 </div>
 <div class="col-sm-9">
   <div class="panel panel-primary">
-  	<div class="panel-heading">
+    <div class="panel-heading">
       Proposal List
     </div>
   <div class="panel-body">
   {{#each proposals}}
     {{#in this.state ../filter}}
+      <div class="row">
+        <div class="panel" data-href="/discussion/{{this.hash}}" style="cursor:pointer;"><div class="panel-body">
+        <div class="col-sm-8">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">{{this.description}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Requests {{this.requested_amount}} NAV</h6>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-1">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"></h5>
+              <h6 class="card-subtitle mb-2 text-muted"></h6>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="badge" style="background-color:{{#eq this.state "ACCEPTED"}}#66cc66{{/eq}}{{#eq this.state "REJECTED"}}#cc6666{{/eq}}{{#eq this.state "EXPIRED"}}#cc6600{{/eq}}">{{this.state}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Votes: {{this.votes_yes}}/{{this.votes_no}} (YES/NO)</h6>
+              <h6 class="card-subtitle mb-2 text-muted">{{moment this.created_at}}</h6>
+            </div>
+          </div>
+          </div>
+        </div>
+        </div>
+        </div>
+      {{/in}}
+    {{else}}
+	There are no proposals with the chosen filter.
+    {{/each}}
+  </div>
+</div>
+  <div class="panel panel-primary">
+  	<div class="panel-heading">
+      Payment Requests List
+    </div>
+  <div class="panel-body">
+  {{#each payment_requests}}
+    {{#in this.state ../filter_pr}}
       <div class="row">
         <div class="panel" data-href="/discussion/{{this.hash}}" style="cursor:pointer;"><div class="panel-body">
         <div class="col-sm-8">

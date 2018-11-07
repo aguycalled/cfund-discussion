@@ -33,18 +33,19 @@
    <div class="row">
       <div class="col-md-6"><div class="panel panel-primary">
          <div class="panel-heading">
-            <h3 class="panel-title">Proposal Info</h3>
+            <h3 class="panel-title">{{#if is_proposal}}Proposal{{else}}Payment Request{{/if}} Info</h3>
          </div>
          <div class="panel-body">
             <table class="table">
                <tr>
                   <td>Title:</td>
-                  <td>{{proposal.description}}</td>
+                  <td>{{#if is_proposal}}{{proposal.description}}{{else}}{{payment_request.description}}{{/if}}</td>
                </tr>
                <tr>
                   <td>Requested amount:</td>
-                  <td>{{proposal.requested_amount}} NAV</td>
+                  <td>{{#if is_proposal}}{{proposal.requested_amount}}{{else}}{{payment_request.requested_amount}}{{/if}} NAV</td>
                </tr>
+               {{#if is_proposal}}
                <tr>
                   <td>Already paid:</td>
                   <td>{{minus proposal.requested_amount proposal.not_yet_paid}} NAV</td>
@@ -61,17 +62,27 @@
                   <td>User paid fee:</td>
                   <td>{{proposal.user_paid_fee}} NAV</td>
                </tr>
+               {{else}}
                <tr>
-                  <td>Proposal status:</td>
+                  <td>Proposal:</td>
+                  <td><a href="/discussion/{{proposal.hash}}">{{proposal.description}}</a>
+               </tr>
+               {{/if}}
+               <tr>
+                  <td>{{#if is_proposal}}Proposal{{else}}Payment Request{{/if}} status:</td>
                   <td>
-                     <h7 class="badge" style="background-color:{{#eq proposal.state "ACCEPTED"}}#66cc66{{/eq}}{{#eq proposal.state "REJECTED"}}#cc6666{{/eq}}{{#eq proposal.state "EXPIRED"}}#cc6600{{/eq}}">{{proposal.state}}</h7>
+                     {{#if is_proposal}}
+                       <h7 class="badge" style="background-color:{{#eq proposal.state "ACCEPTED"}}#66cc66{{/eq}}{{#eq proposal.state "REJECTED"}}#cc6666{{/eq}}{{#eq proposal.state "EXPIRED"}}#cc6600{{/eq}}">{{proposal.state}}</h7>
+                     {{else}}
+                       <h7 class="badge" style="background-color:{{#eq payment_request.state "ACCEPTED"}}#66cc66{{/eq}}{{#eq payment_request.state "REJECTED"}}#cc6666{{/eq}}{{#eq payment_request.state "EXPIRED"}}#cc6600{{/eq}}">{{payment_request.state}}</h7>
+                     {{/if}}
                   </td>
                </tr>
                {{#if user}}
                   <tr>
                      <td>Vote:</td>
-                     <td><button type="button" class="btn btn-clip btn-success" data-clipboard-text="proposalvote {{proposal.hash}} yes" data-toggle="modal" data-target="#howtoModal">Yes</button>
-                     <button type="button" class="btn btn-clip btn-danger" data-clipboard-text="proposalvote {{proposal.hash}} no" data-toggle="modal" data-target="#howtoModal">No</button></td>
+                     <td><button type="button" class="btn btn-clip btn-success" data-clipboard-text="{{#if is_proposal}}proposalvote {{proposal.hash}}{{else}}paymentrequestvote {{payment_request.hash}}{{/if}} yes" data-toggle="modal" data-target="#howtoModal">Yes</button>
+                     <button type="button" class="btn btn-clip btn-danger" data-clipboard-text="{{#if is_proposal}}proposalvote {{proposal.hash}}{{else}}paymentrequestvote {{payment_request.hash}}{{/if}} no" data-toggle="modal" data-target="#howtoModal">No</button></td>
                   </tr>
                {{/if}}
             </table>
@@ -97,7 +108,8 @@
 </div>
 
 {{#each messages}}
-   <div class="panel panel-default">
+  {{#eq this.type 0}}
+    <div class="panel panel-info">
       <div class="panel-heading">
          <span class="panel-title"><b>{{this.username}}</b></span> 
          {{#if this.balance}}
@@ -108,7 +120,18 @@
       <div class="panel-body">
       {{ this.comment }}
       </div>
-   </div>
+    </div>
+  {{/eq}}
+  {{#eq this.type 1}}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+         <span class="panel-title">Proponent requested a payment of {{this.balance}}NAV {{formatRelative this.time}}:</span>
+      </div>
+      <div class="panel-body">
+      A new Payment Request with description "{{ this.comment }}" has been created. <a href="/discussion/{{ this.username }}">Open discussion</a>
+      </div>
+    </div>
+  {{/eq}}
 {{/each}}
 
 <div class="panel">
@@ -143,13 +166,21 @@ var chDonutData1 = {
       {
          backgroundColor: ["#22cc22","#cc2222"],
          borderWidth: 0,
+{{#if is_proposal}}
          data: [ {{proposal.votes_yes}}, {{proposal.votes_no}}, 2160-{{proposal.votes_yes}}-{{proposal.votes_no}}]
+{{else}}
+         data: [ {{payment_request.votes_yes}}, {{payment_request.votes_no}}, 2160-{{payment_request.votes_yes}}-{{payment_request.votes_no}}]
+{{/if}}
       }
    ]
 };
 var chDonut1 = document.getElementById("chart");
 
+{{#if is_proposal}}
 if(!( {{proposal.votes_yes}} ) && !( {{proposal.votes_no}} )) {
+{{else}}
+if(!( {{payment_request.votes_yes}} ) && !( {{payment_request.votes_no}} )) {
+{{/if}}
    var context = chDonut1.getContext("2d");
    context.fillStyle = "black";
    context.font = "16px Sans-Serif";

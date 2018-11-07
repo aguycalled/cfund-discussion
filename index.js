@@ -27,6 +27,9 @@ MomentHandler.registerHelpers(Handlebars);
 Handlebars.registerHelper('eq', function(arg1, arg2, options) {
   return arg1 == arg2 ? options.fn(this) : options.inverse(this);
 });
+Handlebars.registerHelper('concat', function(arg1, arg2, options) {
+  return arg1 + arg2;
+});
 Handlebars.registerHelper('in', function(elem, list, options) {
   if (list.indexOf(elem) > -1) {
     return options.fn(this);
@@ -56,6 +59,7 @@ var MongoClient = require('mongodb').MongoClient;
 
 var statuses = ['PENDING', 'ACCEPTED', 'REJECTED', 'EXPIRED', 'WAITING'];
 var count = [0, 0, 0, 0, 0];
+var count_pr = [0, 0, 0, 0];
 
 passport.use(
   'local-signin',
@@ -178,7 +182,9 @@ app.use(function(req, res, next) {
 app.locals.totalSupply = 0;
 app.locals.stakingCoins = 0;
 var proposals = [];
+var paymentRequests = [];
 var proposalsMap = {};
+var paymentRequestsMap = {};
 
 function getNetworkStats() {
   var urlStakes =
@@ -215,7 +221,9 @@ function getNetworkStats() {
               function(error, response, body) {
                 if (!error && response.statusCode === 200) {
                   count = [0, 0, 0, 0, 0];
+                  count_pr = [0, 0, 0, 0];
                   proposals = body;
+                  paymentRequests = [];
                   for (var p in proposals) {
                     if (statuses.indexOf(proposals[p].state) != -1) {
                       count[statuses.indexOf(proposals[p].state)]++;
@@ -225,7 +233,7 @@ function getNetworkStats() {
                       {
                         url:
                           'https://testnet.navexplorer.com/api/community-fund/proposal/' +
-                          proposals[p] +
+                          proposals[p].hash +
                           '/payment-request',
                         json: true
                       },
@@ -235,7 +243,14 @@ function getNetworkStats() {
                             proposals[p].hash
                           ].payment_requests_count = body.length;
                           proposals[p].payment_requests_count = body.length;
-                          console.log(body);
+                          for(var pr in body) {
+                            funct.addPaymentRequest(body[pr]);
+                            paymentRequestsMap[ body[pr].hash ] = body[pr];
+                            paymentRequests.push(body[pr]);
+                            if (statuses.indexOf(body[pr].state) != -1) {
+                              count_pr[statuses.indexOf(body[pr].state)]++;
+                            }
+                          }
                         }
                       }
                     );
@@ -267,16 +282,23 @@ app.get('/', function(req, res) {
     warning =
       'Please, link some staking addresses to your account in order to use the discussion functionality!';
   var f = [];
+  var fpr = [];
   for (var c in statuses) {
     if (req.query[statuses[c]] == 'on') f.push(statuses[c]);
+    if (req.query[statuses[c] + "_PR"] == 'on') fpr.push(statuses[c]);
   }
+console.log(f,fpr);
   f = f.length == 0 ? ['PENDING', 'WAITING'] : f;
+  fpr = fpr.length == 0 ? ['PENDING'] : fpr;
   res.render('home', {
     user: req.user,
     proposals: _.sortBy(proposals, 'created_at').reverse(),
+    payment_requests: _.sortBy(paymentRequests, 'created_at').reverse(),
     warning: warning,
     filter: f,
+    filter_pr: fpr,
     count: count,
+    count_pr: count_pr,
     statuses: statuses
   });
 });
@@ -344,7 +366,7 @@ app.get('/delete-address', function(req, res) {
 });
 
 function isValidThread(hash) {
-  if (hash.length === 64) return true;
+  if (proposalsMap[hash] || paymentRequestsMap[hash]) return true;
   return false;
 }
 
@@ -362,11 +384,13 @@ app
               'Please, link some staking addresses to your account in order to use the discussion functionality!';
           res.render('discussion', {
             user: req.user,
-            proposal: proposalsMap[req.param('hash')],
+            proposal: proposalsMap[req.param('hash')] ? proposalsMap[req.param('hash')] : proposalsMap[paymentRequestsMap[req.param('hash')].proposal_hash],
+            payment_request: paymentRequestsMap[req.param('hash')],
             messages: m,
             captcha: recaptcha.render(),
             warning: warning,
-            hash: req.param('hash')
+            hash: req.param('hash'),
+            is_proposal: proposalsMap[req.param('hash')] ? true : false,
           });
         });
     } else {
