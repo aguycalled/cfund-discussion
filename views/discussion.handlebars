@@ -79,12 +79,24 @@
                   </td>
                </tr>
                {{#if user}}
-                  <tr>
-                     <td>Vote:</td>
-                     <td><button type="button" class="btn btn-clip btn-success" data-clipboard-text="{{#if is_proposal}}proposalvote {{proposal.hash}}{{else}}paymentrequestvote {{payment_request.hash}}{{/if}} yes" data-toggle="modal" data-target="#howtoModal">Yes</button>
-                     <button type="button" class="btn btn-clip btn-danger" data-clipboard-text="{{#if is_proposal}}proposalvote {{proposal.hash}}{{else}}paymentrequestvote {{payment_request.hash}}{{/if}} no" data-toggle="modal" data-target="#howtoModal">No</button></td>
-                  </tr>
-               {{/if}}
+                 {{#if is_proposal}}
+                   {{#eq proposal.state "PENDING"}}
+                     <tr>
+                       <td>Vote:</td>
+                       <td><button type="button" class="btn btn-clip btn-success" data-clipboard-text="proposalvote {{proposal.hash}} yes" data-toggle="modal" data-target="#howtoModal">Yes</button>
+                       <button type="button" class="btn btn-clip btn-danger" data-clipboard-text="proposalvote {{proposal.hash}} no" data-toggle="modal" data-target="#howtoModal">No</button></td>
+                     </tr>
+                   {{/eq}}
+                 {{else}}
+                   {{#eq payment_request.state "PENDING"}}
+                     <tr>
+                       <td>Vote:</td>
+                       <td><button type="button" class="btn btn-clip btn-success" data-clipboard-text="paymentrequestvote {{payment_request.hash}} yes" data-toggle="modal" data-target="#howtoModal">Yes</button>
+                       <button type="button" class="btn btn-clip btn-danger" data-clipboard-text="paymentrequestvote {{payment_request.hash}} no" data-toggle="modal" data-target="#howtoModal">No</button></td>
+                    </tr>
+                  {{/eq}}
+                {{/if}}
+              {{/if}}
             </table>
          </div>
       </div>
