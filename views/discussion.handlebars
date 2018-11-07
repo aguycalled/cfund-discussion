@@ -43,7 +43,11 @@
                </tr>
                <tr>
                   <td>Requested amount:</td>
-                  <td>{{proposal.requested_amount}} NAV ({{proposal.not_yet_paid}} NAV not paid yet)</td>
+                  <td>{{proposal.requested_amount}} NAV</td>
+               </tr>
+               <tr>
+                  <td>Already paid:</td>
+                  <td>{{minus proposal.requested_amount proposal.not_yet_paid}} NAV</td>
                </tr>
                <tr>
                   <td>Payment Address:</td>
@@ -54,16 +58,14 @@
                   <td>{{duration proposal.proposal_duration}}</td>
                </tr>
                <tr>
-                  <td>Voting cycle:</td>
-                  <td>{{proposal.proposal_votes.elements.[0].voting_cycle}}</td>
-               </tr>
-               <tr>
                   <td>User paid fee:</td>
                   <td>{{proposal.user_paid_fee}} NAV</td>
                </tr>
                <tr>
                   <td>Proposal status:</td>
-                  <td>{{proposal.status}}</td>
+                  <td>
+                     <h7 class="badge" style="background-color:{{#eq proposal.state "ACCEPTED"}}#66cc66{{/eq}}{{#eq proposal.state "REJECTED"}}#cc6666{{/eq}}{{#eq proposal.state "EXPIRED"}}#cc6600{{/eq}}">{{proposal.state}}</h7>
+                  </td>
                </tr>
                {{#if user}}
                   <tr>
