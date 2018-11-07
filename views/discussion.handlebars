@@ -9,11 +9,11 @@
          <div class="modal-body">
             <b>GUI client</b><br>
             <br>
-            Go to the menu Help -> Debug Window.<br>
+            Go to the dropdown menu: Help -> Debug Window.<br>
             Choose the Console tab.<br>
             Paste the contents of the clipboard and press enter.<br>
             <br>
-            <b>Headerless client</b><br>
+            <b>Headless client</b><br>
             <br>
             Open a terminal in your OS.<br>
             Move to the location of your navcoin-cli binary, type ./navcoin-cli and then paste the contents of the clipboard.<br>
@@ -47,7 +47,7 @@
                </tr>
                <tr>
                   <td>Payment Address:</td>
-                  <td>{{proposal.payment_address}}</td>
+                  <td><a href="https://www.navexplorer.com/address/{{proposal.payment_address}}">{{proposal.payment_address}}</a></td>
                </tr>
                <tr>
                   <td>Project duration:</td>
@@ -136,21 +136,22 @@ var donutOptions = {
    }
 };
 var chDonutData1 = {
-   labels: ['Yes', 'No'],
+   labels: ['Yes', 'No', 'Non-voting stakes'],  
    datasets: [
       {
          backgroundColor: ["#22cc22","#cc2222"],
          borderWidth: 0,
-         data: [{{proposal.proposal_votes.elements.[0].votes_yes}}, {{proposal.proposal_votes.elements.[0].votes_no}}, 2160-{{proposal.proposal_votes.elements.[0].votes_yes}}-{{proposal.proposal_votes.elements.[0].votes_no}}]
+         data: [ {{proposal.votes_yes}}, {{proposal.votes_no}}, 2160-{{proposal.votes_yes}}-{{proposal.votes_no}}]
       }
    ]
 };
 var chDonut1 = document.getElementById("chart");
-if(!({{proposal.proposal_votes.elements.[0].votes_yes}}) && !({{proposal.proposal_votes.elements.[0].votes_no}})) {
-var context = chDonut1.getContext("2d");
-context.fillStyle = "black";
-context.font = "16px Arial";
-context.fillText("No votes", (chDonut1.width / 2) - 17, (chDonut1.height / 2) + 8);
+
+if(!( {{proposal.votes_yes}} ) && !( {{proposal.votes_no}} )) {
+   var context = chDonut1.getContext("2d");
+   context.fillStyle = "black";
+   context.font = "16px Sans-Serif";
+   context.fillText("No votes recorded", (chDonut1.width / 2) - 17, (chDonut1.height / 2) + 8);
 } else if (chDonut1) {
    new Chart(chDonut1, {
       type: 'pie',
