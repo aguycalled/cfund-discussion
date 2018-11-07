@@ -1,75 +1,72 @@
 <!-- views/home.handlebars -->
-       <div class="row">
-         <div class="col-sm-3">
+<div class="row">
+  <div class="col-sm-3">
     <div class="panel panel-primary">
-	<div class="panel-heading">
+    	<div class="panel-heading">
           Filter
-       </div>
-       <div class="panel-body">
-<form id="filterform" action="/" method="get">
-<div class="btn-group-vertical btn-block btn-group-toggle" aria-label="Filter proposals" data-toggle="buttons">
-<label class="btn btn-primary {{#in "PENDING" this.filter}}active{{/in}}">
-<input type="checkbox" name="PENDING" id="PENDING" autocomplete="off" {{#in "PENDING" this.filter}}checked{{/in}} onChange="this.form.submit()"> Pending <span class="badge badge-light">{{count.[0]}}</span>
-</label>
-<label class="btn btn-primary {{#in "ACCEPTED" this.filter}}active{{/in}}"  onmouseclick="filterform.submit()">
-<input type="checkbox" name="ACCEPTED" id="ACCEPTED" autocomplete="off" {{#in "ACCEPTED" this.filter}}checked{{/in}} onChange="this.form.submit()"> Accepted <span class="badge badge-light">{{count.[1]}}</span>
-</label>
-<label class="btn btn-primary {{#in "REJECTED" this.filter}}active{{/in}}">
-<input type="checkbox" name="REJECTED" id="REJECTED" autocomplete="off" {{#in "REJECTED" this.filter}}checked{{/in}} onChange="this.form.submit()"> Rejected <span class="badge badge-light">{{count.[2]}}</span>
-</label>
-<label class="btn btn-primary {{#in "EXPIRED" this.filter}}active{{/in}}">
-<input type="checkbox" name="EXPIRED" id="EXPIRED" autocomplete="off" {{#in "EXPIRED" this.filter}}checked{{/in}} onChange="this.form.submit()"> Expired <span class="badge badge-light">{{count.[3]}}</span>
-</label>
-<label class="btn btn-primary {{#in "WAITING" this.filter}}active{{/in}}">
-<input type="checkbox" name="WAITING" id="WAITING" autocomplete="off" {{#in "WAITING" this.filter}}checked{{/in}} onChange="this.form.submit()"> Waiting <span class="badge badge-light">{{count.[4]}}</span>
-</label>
-</form>
-         </div>
-         </div>
-         </div>
-         </div>
-         <div class="col-sm-9">
-    <div class="panel panel-primary">
-	<div class="panel-heading">
-          Proposal List
-       </div>
-       <div class="panel-body">
-    {{#each proposals}}
-     {{#in this.state ../filter}}
-       <div class="row">
+      </div>
+      <div class="panel-body">
+        <form id="filterform" action="/" method="get">
+          <div class="btn-group-vertical btn-block btn-group-toggle" aria-label="Filter proposals" data-toggle="buttons">
+            <label class="btn btn-primary {{#in "PENDING" this.filter}}active{{/in}}">
+              <input type="checkbox" name="PENDING" id="PENDING" autocomplete="off" {{#in "PENDING" this.filter}}checked{{/in}} onChange="this.form.submit()"> Pending <span class="badge badge-light">{{count.[0]}}</span>
+            </label>
+            <label class="btn btn-primary {{#in "ACCEPTED" this.filter}}active{{/in}}"  onmouseclick="filterform.submit()">
+              <input type="checkbox" name="ACCEPTED" id="ACCEPTED" autocomplete="off" {{#in "ACCEPTED" this.filter}}checked{{/in}} onChange="this.form.submit()"> Accepted <span class="badge badge-light">{{count.[1]}}</span>
+            </label>
+            <label class="btn btn-primary {{#in "REJECTED" this.filter}}active{{/in}}">
+              <input type="checkbox" name="REJECTED" id="REJECTED" autocomplete="off" {{#in "REJECTED" this.filter}}checked{{/in}} onChange="this.form.submit()"> Rejected <span class="badge badge-light">{{count.[2]}}</span>
+            </label>
+            <label class="btn btn-primary {{#in "EXPIRED" this.filter}}active{{/in}}">
+              <input type="checkbox" name="EXPIRED" id="EXPIRED" autocomplete="off" {{#in "EXPIRED" this.filter}}checked{{/in}} onChange="this.form.submit()"> Expired <span class="badge badge-light">{{count.[3]}}</span>
+            </label>
+            <label class="btn btn-primary {{#in "WAITING" this.filter}}active{{/in}}">
+              <input type="checkbox" name="WAITING" id="WAITING" autocomplete="off" {{#in "WAITING" this.filter}}checked{{/in}} onChange="this.form.submit()"> Waiting <span class="badge badge-light">{{count.[4]}}</span>
+            </label>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-sm-9">
+  <div class="panel panel-primary">
+  	<div class="panel-heading">
+      Proposal List
+    </div>
+  <div class="panel-body">
+  {{#each proposals}}
+    {{#in this.state ../filter}}
+      <div class="row">
         <div class="panel" data-href="/discussion/{{this.hash}}" style="cursor:pointer;"><div class="panel-body">
         <div class="col-sm-8">
-         <div class="card">
-           <div class="card-body">
-             <h3 class="card-title">{{this.description}}</h5>
-             <h6 class="card-subtitle mb-2 text-muted">Requests {{this.requested_amount}} NAV</h6>
-           </div>
-         </div>
-       </div>
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">{{this.description}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Requests {{this.requested_amount}} NAV</h6>
+            </div>
+          </div>
+        </div>
         <div class="col-sm-1">
-         <div class="card">
-           <div class="card-body">
-             <h5 class="card-title"></h5>
-             <h6 class="card-subtitle mb-2 text-muted"></h6>
-           </div>
-         </div>
-       </div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"></h5>
+              <h6 class="card-subtitle mb-2 text-muted"></h6>
+            </div>
+          </div>
+        </div>
         <div class="col-sm-3">
-         <div class="card">
-           <div class="card-body">
-             <h5 class="badge" style="background-color:{{#eq this.state "ACCEPTED"}}#66cc66{{/eq}}{{#eq this.state "REJECTED"}}#cc6666{{/eq}}{{#eq this.state "EXPIRED"}}#cc6600{{/eq}}">{{this.state}}</h5>
-             <h6 class="card-subtitle mb-2 text-muted">Votes: {{this.proposal_votes.elements.[0].votes_yes}}/{{this.proposal_votes.elements.[0].votes_no}} (YES/NO)</h6>
-             <h6 class="card-subtitle mb-2 text-muted">{{moment this.created_at}}</h6>
-           </div>
-         </div>
-         </div>
-       </div>
-       </div>
-       </div>
-     {{/in}}
+          <div class="card">
+            <div class="card-body">
+              <h5 class="badge" style="background-color:{{#eq this.state "ACCEPTED"}}#66cc66{{/eq}}{{#eq this.state "REJECTED"}}#cc6666{{/eq}}{{#eq this.state "EXPIRED"}}#cc6600{{/eq}}">{{this.state}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Votes: {{this.votes_yes}}/{{this.votes_no}} (YES/NO)</h6>
+              <h6 class="card-subtitle mb-2 text-muted">{{moment this.created_at}}</h6>
+            </div>
+          </div>
+          </div>
+        </div>
+        </div>
+        </div>
+      {{/in}}
     {{/each}}
-       </div>
-    </div>
-
-       </div>
-       </div>
+  </div>
+</div>

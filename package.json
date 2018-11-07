@@ -1,18 +1,27 @@
 {
   "name": "cfund",
+  "repository": "github:aguycalled/cfund-discussion",
   "main": "index.js",
+  "scripts": {
+    "dev": "node index.js development",
+    "prod": "node index.js"
+  },
   "dependencies": {
     "async": "^2.6.1",
     "bcryptjs": "^0.7.12",
     "bitcore-lib": "github:encrypt-s/bitcore-lib",
     "bitcore-message": "github:encrypt-s/bitcore-message",
-    "express": "^3.5.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
     "express-recaptcha": "^4.0.3",
+    "express-session": "^1.15.6",
     "handlebars-helpers": "^0.10.0",
     "handlebars-intl": "^1.1.2",
     "handlebars.moment": "^1.0.4",
+    "method-override": "^3.0.0",
     "mongodb": "^2.2.11",
+    "morgan": "^1.9.1",
     "passport": "^0.2.0",
     "passport-facebook": "^1.0.3",
     "passport-google": "^0.3.0",

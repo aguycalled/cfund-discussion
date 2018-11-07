@@ -1,150 +1,165 @@
 
 <!-- views/addresses.handlebars -->
-    <div class="modal fade" id="howtoModal" tabindex="-1" role="dialog" aria-labelledby="howtoModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="howtoModalCenterTitle">How to vote.</h5>
-      </div>
-      <div class="modal-body">
-	<b>GUI client</b><br><br>
-	Go to the menu Help -> Debug Window.<br>Choose the Console tab.<br>Paste the contents of the clipboard and press enter.<br><br>
-	<b>Headerless client</b><br><br>
-	Open a terminal in your OS.<br>Move to the location of your navcoin-cli binary, type ./navcoin-cli and then paste the contents of the clipboard.<br>
-        Press enter.<br><br>
-        <b>NavPi</b><br><br>
-        Go to...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-    <div class="panel">
-	<div class="row">
-		<div class="col-md-6"><div class="panel panel-primary">
-			<div class="panel-heading">
-				<h3 class="panel-title">Proposal Info</h3>
-			</div>
-			<div class="panel-body">
-				<table class="table">
-					<tr>
-						<td>Title:</td>
-						<td>{{proposal.description}}</td>
-					</tr>
-					<tr>
-						<td>Requested amount:</td>
-						<td>{{proposal.requested_amount}} NAV ({{proposal.not_yet_paid}} NAV not paid yet)</td>
-					</tr>
-					<tr>
-						<td>Payment Address:</td>
-						<td>{{proposal.payment_address}}</td>
-					</tr>
-					<tr>
-						<td>Project duration:</td>
-						<td>{{duration proposal.proposal_duration}}</td>
-					</tr>
-					<tr>
-						<td>Voting cycle:</td>
-						<td>{{proposal.proposal_votes.elements.[0].voting_cycle}}</td>
-					</tr>
-					<tr>
-						<td>User paid fee:</td>
-						<td>{{proposal.user_paid_fee}} NAV</td>
-					</tr>
-					<tr>
-						<td>Proposal status:</td>
-						<td>{{proposal.status}}</td>
-					</tr>
-    {{#if user}}
-					<tr>
-						<td>Vote:</td>
-						<td><button type="button" class="btn btn-clip btn-success" data-clipboard-text="proposalvote {{proposal.hash}} yes" data-toggle="modal" data-target="#howtoModal">Yes</button>
-						<button type="button" class="btn btn-clip btn-danger" data-clipboard-text="proposalvote {{proposal.hash}} no" data-toggle="modal" data-target="#howtoModal">No</button></td>
-					</tr>
-    {{/if}}
-				</table>
-			</div>
-		</div></div><div class="col-md-6">
-		<div class="panel panel-primary">
-			<div class="panel-heading">
-				<h3 class="panel-title">Votes</h3>
-			</div>
-			<div class="panel-body">
-				<canvas id="chart"></canvas>
-			</div>
-		</div>
-       </div>
-    </div>
-
-    <div class="panel panel-primary">
-       <div class="panel-heading">
-          <h3 class="panel-title">Conversation</h3>
-       </div>
-    </div>
-
-    {{#each messages}}
-    <div class="panel panel-default">
-       <div class="panel-heading">
-          <span class="panel-title"><b>{{this.username}}</b></span> 
-	   {{#if this.balance}}
-           (approx {{floor (multiply 20160 this.balance)}} votes per period)
-           {{/if}}
-           said {{formatRelative this.time}}:
-       </div>
-       <div class="panel-body">
-         {{ this.comment }}
-       </div>
-    </div>
-    {{/each}}
-
-    <div class="panel">
-       <div class="panel-heading">
-          <h3 class="panel-title">Add your comment</h3>
-       </div>
-       <div class="panel-body">
-          <form id="add-address" action="/discussion/{{hash}}" method="post">
-             <div>
-                <label>Comment:</label>
-                <textarea class="form-control form-control-lg" name="comment"></textarea>
-             </div>
-            <div style="margin-top:15px">
-               <input type="submit" class="btn btn-primary mb2" value="Send"/>
-            </div>
-         </form>
+<div class="modal fade" id="howtoModal" tabindex="-1" role="dialog" aria-labelledby="howtoModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="howtoModalCenterTitle">How to vote.</h5>
+         </div>
+         <div class="modal-body">
+            <b>GUI client</b><br>
+            <br>
+            Go to the dropdown menu: Help -> Debug Window.<br>
+            Choose the Console tab.<br>
+            Paste the contents of the clipboard and press enter.<br>
+            <br>
+            <b>Headless client</b><br>
+            <br>
+            Open a terminal in your OS.<br>
+            Move to the location of your navcoin-cli binary, type ./navcoin-cli and then paste the contents of the clipboard.<br>
+            Press enter.<br>
+            <br>
+            <b>NavPi</b><br>
+            <br>
+            Go to...
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         </div>
       </div>
    </div>
-   <script>
+</div>
+<div class="panel">
+   <div class="row">
+      <div class="col-md-6"><div class="panel panel-primary">
+         <div class="panel-heading">
+            <h3 class="panel-title">Proposal Info</h3>
+         </div>
+         <div class="panel-body">
+            <table class="table">
+               <tr>
+                  <td>Title:</td>
+                  <td>{{proposal.description}}</td>
+               </tr>
+               <tr>
+                  <td>Requested amount:</td>
+                  <td>{{proposal.requested_amount}} NAV ({{proposal.not_yet_paid}} NAV not paid yet)</td>
+               </tr>
+               <tr>
+                  <td>Payment Address:</td>
+                  <td><a href="https://www.navexplorer.com/address/{{proposal.payment_address}}">{{proposal.payment_address}}</a></td>
+               </tr>
+               <tr>
+                  <td>Project duration:</td>
+                  <td>{{duration proposal.proposal_duration}}</td>
+               </tr>
+               <tr>
+                  <td>Voting cycle:</td>
+                  <td>{{proposal.proposal_votes.elements.[0].voting_cycle}}</td>
+               </tr>
+               <tr>
+                  <td>User paid fee:</td>
+                  <td>{{proposal.user_paid_fee}} NAV</td>
+               </tr>
+               <tr>
+                  <td>Proposal status:</td>
+                  <td>{{proposal.status}}</td>
+               </tr>
+               {{#if user}}
+                  <tr>
+                     <td>Vote:</td>
+                     <td><button type="button" class="btn btn-clip btn-success" data-clipboard-text="proposalvote {{proposal.hash}} yes" data-toggle="modal" data-target="#howtoModal">Yes</button>
+                     <button type="button" class="btn btn-clip btn-danger" data-clipboard-text="proposalvote {{proposal.hash}} no" data-toggle="modal" data-target="#howtoModal">No</button></td>
+                  </tr>
+               {{/if}}
+            </table>
+         </div>
+      </div>
+   </div>
+   <div class="col-md-6">
+      <div class="panel panel-primary">
+         <div class="panel-heading">
+            <h3 class="panel-title">Votes</h3>
+         </div>
+         <div class="panel-body">
+            <canvas id="chart"></canvas>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="panel panel-primary">
+   <div class="panel-heading">
+      <h3 class="panel-title">Conversation</h3>
+   </div>
+</div>
+
+{{#each messages}}
+   <div class="panel panel-default">
+      <div class="panel-heading">
+         <span class="panel-title"><b>{{this.username}}</b></span> 
+         {{#if this.balance}}
+            (approx {{floor (multiply 20160 this.balance)}} votes per period)
+         {{/if}}
+         said {{formatRelative this.time}}:
+      </div>
+      <div class="panel-body">
+      {{ this.comment }}
+      </div>
+   </div>
+{{/each}}
+
+<div class="panel">
+   <div class="panel-heading">
+      <h3 class="panel-title">Add your comment</h3>
+   </div>
+   <div class="panel-body">
+      <form id="add-address" action="/discussion/{{hash}}" method="post">
+         <div>
+            <label>Comment:</label>
+            <textarea class="form-control form-control-lg" name="comment"></textarea>
+         </div>
+         <div style="margin-top:15px">
+            <input type="submit" class="btn btn-primary mb2" value="Send"/>
+         </div>
+      </form>
+   </div>
+</div>
+
+
+<script>
+
 var donutOptions = {
-  cutoutPercentage: 60, 
-  legend: {position:'bottom', 
-  }
+   cutoutPercentage: 60, 
+   legend: {
+      position:'bottom', 
+   }
 };
 var chDonutData1 = {
-    labels: ['Yes', 'No'],
-    datasets: [
+   labels: ['Yes', 'No', 'Non-voting stakes'],  
+   datasets: [
       {
-        backgroundColor: ["#22cc22","#cc2222"],
-        borderWidth: 0,
-        data: [{{proposal.proposal_votes.elements.[0].votes_yes}}, {{proposal.proposal_votes.elements.[0].votes_no}}, 2160-{{proposal.proposal_votes.elements.[0].votes_yes}}-{{proposal.proposal_votes.elements.[0].votes_no}}]
+         backgroundColor: ["#22cc22","#cc2222"],
+         borderWidth: 0,
+         data: [ {{proposal.votes_yes}}, {{proposal.votes_no}}, 2160-{{proposal.votes_yes}}-{{proposal.votes_no}}]
       }
-    ]
+   ]
 };
 var chDonut1 = document.getElementById("chart");
-if(!({{proposal.proposal_votes.elements.[0].votes_yes}}) && !({{proposal.proposal_votes.elements.[0].votes_no}})) {
-var context = chDonut1.getContext("2d");
-context.fillStyle = "black";
-context.font = "16px Arial";
-context.fillText("No votes", (chDonut1.width / 2) - 17, (chDonut1.height / 2) + 8);
+
+if(!( {{proposal.votes_yes}} ) && !( {{proposal.votes_no}} )) {
+   var context = chDonut1.getContext("2d");
+   context.fillStyle = "black";
+   context.font = "16px Sans-Serif";
+   context.fillText("No votes recorded", (chDonut1.width / 2) - 17, (chDonut1.height / 2) + 8);
 } else if (chDonut1) {
-  new Chart(chDonut1, {
+   new Chart(chDonut1, {
       type: 'pie',
       data: chDonutData1,
       options: donutOptions
-  });
+   });
 }
 
-   </script>
+</script>
 
 
