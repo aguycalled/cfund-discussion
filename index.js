@@ -191,7 +191,7 @@ function getNetworkStats() {
     'https://chainz.cryptoid.info/explorer/index.stakes.dws?coin=nav';
   var urlData = 'https://chainz.cryptoid.info/explorer/index.data.dws?coin=nav';
   var urlProposals =
-    'https://testnet.navexplorer.com/api/community-fund/proposal';
+    'https://mainnet.navexplorer.com/api/community-fund/proposal';
   request(
     {
       url: urlData,
@@ -232,7 +232,7 @@ function getNetworkStats() {
                     request(
                       {
                         url:
-                          'https://testnet.navexplorer.com/api/community-fund/proposal/' +
+                          'https://mainnet.navexplorer.com/api/community-fund/proposal/' +
                           proposals[p].hash +
                           '/payment-request',
                         json: true
