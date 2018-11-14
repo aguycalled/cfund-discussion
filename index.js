@@ -287,13 +287,12 @@ app.get('/', function(req, res) {
     if (req.query[statuses[c]] == 'on') f.push(statuses[c]);
     if (req.query[statuses[c] + "_PR"] == 'on') fpr.push(statuses[c]);
   }
-console.log(f,fpr);
   f = f.length == 0 ? ['PENDING', 'WAITING'] : f;
   fpr = fpr.length == 0 ? ['PENDING'] : fpr;
   res.render('home', {
     user: req.user,
-    proposals: _.sortBy(proposals, 'created_at').reverse(),
-    payment_requests: _.sortBy(paymentRequests, 'created_at').reverse(),
+    proposals: _.sortBy(_(proposals).filter(function(x){return f.indexOf(x.state) != -1;}), 'created_at').reverse(),
+    payment_requests: _.sortBy(_(paymentRequests).filter(function(x){return fpr.indexOf(x.state) != -1;}), 'created_at').reverse(),
     warning: warning,
     filter: f,
     filter_pr: fpr,

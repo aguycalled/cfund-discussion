@@ -49,24 +49,28 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-              {{#if user}}
-	                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                  <li>
-                    <a href="/addresses">My Addresses</a>
-                  </li>
-                  <li>
-                    <a href="/logout">Log Out</a>
-                  </li>
-              {{else}}
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                <li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="https://nav-proposal-creator.netlify.com/proposal/create">Create Proposal</a>
+            </li>
+            <li>
+              <a href="https://nav-proposal-creator.netlify.com/payment-request/create">Create Payment Request</a>
+            </li>
+            {{#if user}}
+              <li>
+                <a href="/addresses">My Addresses</a>
+              </li>
+              <li>
+                 <a href="/logout">Log Out</a>
+              </li>
+            {{else}}
+              <li>
                 <a href="/signin">Login</a>
-                </li>
-		<li>
+              </li>
+              <li>
                 <a href="/register">Register</a>
-		</li>
+              </li>
               {{/if}}
           </ul>
         </div><!-- /.navbar-collapse -->
