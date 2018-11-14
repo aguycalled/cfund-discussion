@@ -1,0 +1,38 @@
+<!-- views/signin.handlebars -->
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Create Payment Request</div>
+        <div class="panel-body">
+            <div>
+              <p></p>
+              <label>Proposal Hash:</label>
+              <select class="form-control form-control-lg"  type="text" id="proposal" name="proposal">
+              {{#each proposals}}
+                <option value="{{this.hash}}">{{this.description}} - {{this.hash}}</option>
+              {{/each}}
+              </select>
+            </div>
+            <div>
+              <p></p>
+              <label>Requested Amount:</label>
+              <input class="form-control form-control-lg"  type="text" id="amount" name="amount"/>
+            </div>
+            <div>
+              <p></p>
+              <label>Description:</label>
+              <input class="form-control form-control-lg"  type="text" id="description" name="description"/>
+            </div>
+            <div style="margin-top:15px">
+              <input type="submit" class="btn btn-primary btn-sm" value="Generate Command" onmousedown="if(proposal.value && amount.value && description.value){warning.style.display='none';command.style.display='block';a.innerHTML='createpaymentrequest '+proposal.value+' '+amount.value+' &#34;'+description.value+'&#34;'}else{warning.innerHTML='Fill the form';warning.style.display='block';command.style.display='none';return;}"/>
+            </div>
+            <br>
+            <div class="col-md-4 alert alert-danger" style="display:none" id="warning"></div>
+        </div>
+      </div>
+  </div>
+</div>  
+<div id="command" style="display:none;text-align:center">
+ <p><br>Open your NavCoin Core Wallet's debug console, copy this command and run it in your wallet:<br><br><b><span id="a" class="clipboard"></span></b>
+</div>

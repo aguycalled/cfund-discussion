@@ -310,6 +310,13 @@ app.get('/register', function(req, res) {
   res.render('register', { captcha: recaptcha.render() });
 });
 
+app.get('/create-proposal', function(req, res) {
+  res.render('create-proposal', { });
+});
+app.get('/create-payment-request', function(req, res) {
+  res.render('create-payment-request', {proposals: _(proposals).filter(function(x){return x.state == "PENDING"})});
+});
+
 app
   .get('/addresses', function(req, res) {
     ensureAuthenticated(req, res, function(req, res) {
