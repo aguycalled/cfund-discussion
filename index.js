@@ -191,7 +191,7 @@ function getNetworkStats() {
     'https://chainz.cryptoid.info/explorer/index.stakes.dws?coin=nav';
   var urlData = 'https://chainz.cryptoid.info/explorer/index.data.dws?coin=nav';
   var urlProposals =
-    'https://mainnet.navexplorer.com/api/community-fund/proposal';
+    'https://testnet.navexplorer.com/api/community-fund/proposal';
   request(
     {
       url: urlData,
@@ -232,7 +232,7 @@ function getNetworkStats() {
                     request(
                       {
                         url:
-                          'https://mainnet.navexplorer.com/api/community-fund/proposal/' +
+                          'https://testnet.navexplorer.com/api/community-fund/proposal/' +
                           proposals[p].hash +
                           '/payment-request',
                         json: true
@@ -314,7 +314,7 @@ app.get('/create-proposal', function(req, res) {
   res.render('create-proposal', { });
 });
 app.get('/create-payment-request', function(req, res) {
-  res.render('create-payment-request', {proposals: _(proposals).filter(function(x){return x.state == "PENDING"})});
+  res.render('create-payment-request', {proposals: _(proposals).filter(function(x){return x.state == "ACCEPTED"})});
 });
 
 app
