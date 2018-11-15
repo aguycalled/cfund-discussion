@@ -6,7 +6,7 @@
     <span class="close">&times;</span>
 
          <div class="modal-header">
-            <h5 class="modal-title" id="howtoModalCenterTitle">How to vote.</h5>
+            <h3 class="modal-title" id="howtoModalCenterTitle">Command copied.</h3>
          </div>
          <div class="modal-body">
             <b>GUI client</b><br>
@@ -90,8 +90,8 @@
                    {{#eq payment_request.state "PENDING"}}
                      <tr>
                        <td>Vote:</td>
-                       <td><button type="button" class="btn btn-clip btn-success" data-clipboard-text="paymentrequestvote {{payment_request.hash}} yes" data-toggle="modal" data-target="#howtoModal">Yes</button>
-                       <button type="button" class="btn btn-clip btn-danger" data-clipboard-text="paymentrequestvote {{payment_request.hash}} no" data-toggle="modal" data-target="#howtoModal">No</button></td>
+                       <td><button type="button" class="btn btn-clip btn-success modalBtn" data-clipboard-text="paymentrequestvote {{payment_request.hash}} yes">Yes</button>
+                       <button type="button" class="btn btn-clip btn-danger modalBtn" data-clipboard-text="paymentrequestvote {{payment_request.hash}} no">No</button></td>
                     </tr>
                   {{/eq}}
                 {{/if}}
