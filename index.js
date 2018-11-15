@@ -244,6 +244,7 @@ function getNetworkStats() {
                           ].payment_requests_count = body.length;
                           proposals[p].payment_requests_count = body.length;
                           for(var pr in body) {
+                            body[pr].parent_title = proposals[p].description;
                             funct.addPaymentRequest(body[pr]);
                             paymentRequestsMap[ body[pr].hash ] = body[pr];
                             paymentRequests.push(body[pr]);
