@@ -101,11 +101,13 @@ function updateBalance(collection, collectionUsers, username, done){
   });
 }
 
-exports.getDiscussion = function(hash, stakingCoins) {
+exports.getDiscussion = function(user, hash, stakingCoins) {
   var deferred = Q.defer();
   MongoClient.connect(mongodbUrl, function(err, db) {
     var collection = db.collection('Discussion');
     var collectionUsers = db.collection('localUsers');
+    var collectionViews = db.collection('discussionUserViews');
+    var date = new Date();
     var cursor = collection.find({'hash': hash}).sort({ "time": 1 }).toArray(function (err, results) {
       async.forEachOf(results, function(value,key,callback) {
         if(results[key].type == 0) {
@@ -117,9 +119,37 @@ exports.getDiscussion = function(hash, stakingCoins) {
           callback();
         }
       }, function (err) {
-        deferred.resolve(results);
+        if(user) {
+          collectionViews.update({userid:user._id,hash:hash},{$set:{time:date.getTime()}},{ upsert : true }).then(function(err, result) {
+            deferred.resolve(results);
+          });
+        } else {
+          deferred.resolve(results);
+        }
       });
     });
+  });
+  return deferred.promise;
+}
+
+exports.getLastComment = function(hash) {
+  var deferred = Q.defer();
+  MongoClient.connect(mongodbUrl, function(err, db) {
+    var collection = db.collection('Discussion');
+    var last=collection.find().sort({time:-1}).limit(1).toArray();
+    db.close();
+    deferred.resolve(last[0]);
+  });
+  return deferred.promise;
+}
+
+exports.getLastVisit = function(hash, user) {
+  var deferred = Q.defer();
+  MongoClient.connect(mongodbUrl, function(err, db) {
+    var collection = db.collection('discussionUserViews');
+    var last = collection.findOne({'hash':hash,'userid':user._id});
+    db.close();
+    deferred.resolve(last[0]);
   });
   return deferred.promise;
 }

@@ -380,7 +380,7 @@ app
   .get('/discussion/:hash', function(req, res) {
     if (isValidThread(req.param('hash'))) {
       funct
-        .getDiscussion(req.param('hash'), app.locals.stakingCoins)
+        .getDiscussion(req.user, req.param('hash'), app.locals.stakingCoins)
         .then(function(m) {
           var warning = '';
           if (!req.user)
