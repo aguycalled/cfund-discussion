@@ -1,19 +1,22 @@
 
 <!-- views/addresses.handlebars -->
 <div id="myModal" class="modal">
-   <div class="modal-dialog modal-dialog-centered" role="document">
+   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
     <span class="close">&times;</span>
 
          <div class="modal-header">
-            <h3 class="modal-title" id="howtoModalCenterTitle">Command copied.</h3>
+            <h3 class="modal-title" id="howtoModalCenterTitle">How to vote</h3>
          </div>
          <div class="modal-body">
+            <h4><b>Command:</b></h4>
+            <span id="cmd" style="word-wrap:break-word;line-height: 260%;" class="clipboard"></span><br><br>
             <b>GUI client</b><br>
             <br>
             Go to the dropdown menu: Help -> Debug Window.<br>
             Choose the Console tab.<br>
-            Paste the contents of the clipboard and press enter.<br>
+            Paste the contents of the clipboard (Control+V / Cmd+V) and press enter.<br>
+            If everything goes good you'll see an empty line.<br>
             <br>
             <b>Headless client</b><br>
             <br>
@@ -39,7 +42,7 @@
             <table class="table">
                <tr>
                   <td>Title:</td>
-                  <td>{{#if is_proposal}}{{proposal.description}}{{else}}{{payment_request.description}}{{/if}}</td>
+                  <td>{{#if is_proposal}}{{url proposal.description}}{{else}}{{url payment_request.description}}{{/if}}</td>
                </tr>
                <tr>
                   <td>Requested amount:</td>
@@ -56,7 +59,7 @@
                </tr>
                <tr>
                   <td>Project duration:</td>
-                  <td>{{duration proposal.proposal_duration}}</td>
+                  <td>{{duration (multiply 1000 proposal.proposal_duration)}}</td>
                </tr>
                <tr>
                   <td>User paid fee:</td>
@@ -82,8 +85,8 @@
                    {{#eq proposal.state "PENDING"}}
                      <tr>
                        <td>Vote:</td>
-                       <td><button type="button" class="btn btn-clip btn-success modalBtn" data-clipboard-text="proposalvote {{proposal.hash}} yes">Yes</button>
-                       <button type="button" class="btn btn-clip btn-danger modalBtn" data-clipboard-text="proposalvote {{proposal.hash}} no">No</button></td>
+                       <td><button type="button" class="btn btn-clip btn-success modalBtn" data-clipboard-text="proposalvote {{proposal.hash}} yes" onmousedown="cmd.innerHTML='proposalvote {{proposal.hash}} yes'">Yes</button>
+                       <button type="button" class="btn btn-clip btn-danger modalBtn" data-clipboard-text="proposalvote {{proposal.hash}} no"  onmousedown="cmd.innerHTML='proposalvote {{proposal.hash}} no'">No</button></td>
                      </tr>
                    {{/eq}}
                  {{else}}

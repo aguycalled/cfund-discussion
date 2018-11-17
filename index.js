@@ -36,7 +36,20 @@ Handlebars.registerHelper('in', function(elem, list, options) {
   }
   return options.inverse(this);
 });
+Handlebars.registerHelper('url', function(str) {
+    str = Handlebars.Utils.escapeExpression(str);
 
+    var matches = str.match(/http\S+/);
+    var wrapped = matches.map(function(v, i, a) {
+        return '<a href="' + v + '">' + v + '</a>';
+    });
+
+    for (var i = 0; i < matches.length; i++) {
+        str = str.replace(matches[i], wrapped[i]);
+    }
+
+    return new Handlebars.SafeString(str)
+});
 var app = express();
 var Recaptcha,
     recaptcha;
@@ -191,7 +204,7 @@ function getNetworkStats() {
     'https://chainz.cryptoid.info/explorer/index.stakes.dws?coin=nav';
   var urlData = 'https://chainz.cryptoid.info/explorer/index.data.dws?coin=nav';
   var urlProposals =
-    'https://testnet.navexplorer.com/api/community-fund/proposal';
+    'https://navexplorer.com/api/community-fund/proposal';
   request(
     {
       url: urlData,
@@ -232,7 +245,7 @@ function getNetworkStats() {
                     request(
                       {
                         url:
-                          'https://testnet.navexplorer.com/api/community-fund/proposal/' +
+                          'https://navexplorer.com/api/community-fund/proposal/' +
                           proposals[p].hash +
                           '/payment-request',
                         json: true
