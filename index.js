@@ -198,13 +198,24 @@ var proposals = [];
 var paymentRequests = [];
 var proposalsMap = {};
 var paymentRequestsMap = {};
-
+var blockheight = 0;
+var blockperiod = 0;
 function getNetworkStats() {
   var urlStakes =
     'https://chainz.cryptoid.info/explorer/index.stakes.dws?coin=nav';
   var urlData = 'https://chainz.cryptoid.info/explorer/index.data.dws?coin=nav';
   var urlProposals =
     'https://navexplorer.com/api/community-fund/proposal';
+  request(
+    {
+      url:'http://chainz.cryptoid.info/nav/api.dws?q=getblockcount',
+      json: true
+    },
+    function(error,response,body) {
+      blockheight = body;
+      blockperiod = body % 20160;
+    }
+  )
   request(
     {
       url: urlData,
@@ -410,6 +421,8 @@ app
             captcha: recaptcha.render(),
             warning: warning,
             hash: req.param('hash'),
+            blockheight: blockheight,
+            blockperiod: blockperiod,
             is_proposal: proposalsMap[req.param('hash')] ? true : false,
           });
         });

@@ -174,15 +174,15 @@ var donutOptions = {
    }
 };
 var chDonutData1 = {
-   labels: ['Yes', 'No', 'Non-voting stakes'],  
+   labels: ['Yes', 'No', 'Abstention', "Blocks left in this period"],  
    datasets: [
       {
-         backgroundColor: ["#22cc22","#cc2222"],
+         backgroundColor: ["#22cc22","#cc2222","#cccccc","#eeeeee"],
          borderWidth: 0,
 {{#if is_proposal}}
-         data: [ {{proposal.votes_yes}}, {{proposal.votes_no}}, 2160-{{proposal.votes_yes}}-{{proposal.votes_no}}]
+         data: [ {{proposal.votes_yes}}, {{proposal.votes_no}}, {{blockperiod}}-{{proposal.votes_yes}}-{{proposal.votes_no}}, 20160-{{blockperiod}}]
 {{else}}
-         data: [ {{payment_request.votes_yes}}, {{payment_request.votes_no}}, 2160-{{payment_request.votes_yes}}-{{payment_request.votes_no}}]
+         data: [ {{payment_request.votes_yes}}, {{payment_request.votes_no}}, {{blockperiod}}-{{payment_request.votes_yes}}-{{payment_request.votes_no}}, 20160-{{blockperiod}}]
 {{/if}}
       }
    ]
