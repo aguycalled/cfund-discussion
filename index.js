@@ -208,14 +208,15 @@ function getNetworkStats() {
     'https://navexplorer.com/api/community-fund/proposal';
   request(
     {
-      url:'http://chainz.cryptoid.info/nav/api.dws?q=getblockcount',
+      url:'https://www.navexplorer.com/api/block/height',
       json: true
     },
     function(error,response,body) {
-      blockheight = body;
+      if(!error) {
+        blockheight = body;
       blockperiod = body % 20160;
     }
-  )
+  });
   request(
     {
       url: urlData,
